@@ -1,0 +1,193 @@
+---
+// About Section — The Compliance Binder Differentiator
+---
+
+<section class="section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <!-- Left: visual -->
+      <div class="about-visual" aria-hidden="true">
+        <div class="binder-card">
+          <div class="binder-tab">COMPLIANCE BINDER</div>
+          <ul class="binder-toc">
+            <li><span class="toc-num">01</span><span class="toc-item">Infrastructure Configuration Register</span></li>
+            <li><span class="toc-num">02</span><span class="toc-item">Identity & Access Policy</span></li>
+            <li><span class="toc-num">03</span><span class="toc-item">DR Test Results & RTO Log</span></li>
+            <li><span class="toc-num">04</span><span class="toc-item">Regulatory Gap Analysis Report</span></li>
+            <li><span class="toc-num">05</span><span class="toc-item">Change Management Records</span></li>
+            <li><span class="toc-num">06</span><span class="toc-item">Audit Trail & Evidence Package</span></li>
+          </ul>
+          <div class="binder-badge">
+            <span class="badge-icon">✔</span>
+            Living Document — Always Current
+          </div>
+        </div>
+        <div class="about-deco-text" aria-hidden="true">IF IT ISN'T DOCUMENTED,<br />IT DIDN'T HAPPEN.</div>
+      </div>
+
+      <!-- Right: content -->
+      <div class="about-content">
+        <div class="accent-line"></div>
+        <p class="section-label">Our Differentiator</p>
+        <h2 class="section-heading">
+          The <span class="accent-text">Compliance Binder</span><br />
+          Changes Everything.
+        </h2>
+        <p class="about-body">
+          Rooted in FDA/cGMP validation methodology, we operate by a principle that separates serious
+          infrastructure partners from commodity vendors: <strong class="highlight">if it isn't documented,
+          it didn't happen.</strong>
+        </p>
+        <p class="about-body">
+          Every engagement we deliver includes a <strong class="highlight">Compliance Binder</strong> —
+          a living, structured repository of configurations, policies, test results, and audit evidence.
+          When regulators arrive, you hand them the binder. When something changes, the binder changes.
+          When auditors ask questions, the answers are already written down.
+        </p>
+        <p class="about-body">
+          For a busy business owner or compliance officer, that binder is worth its weight in gold.
+        </p>
+
+        <div class="expertise-chips">
+          <span class="chip">FDA / cGMP</span>
+          <span class="chip">NIST CSF</span>
+          <span class="chip">FINRA</span>
+          <span class="chip">ISO 27001</span>
+          <span class="chip">Microsoft Intune</span>
+          <span class="chip">Authentik IdP</span>
+          <span class="chip">YubiKey / MFA</span>
+          <span class="chip">Disaster Recovery</span>
+        </div>
+
+        <a href="#contact" class="btn btn-primary" style="margin-top: 1.5rem;">
+          Start Your Readiness Assessment
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .accent-text { color: var(--color-accent); }
+  .highlight { color: var(--color-text-primary); font-weight: 600; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4xl);
+    align-items: center;
+  }
+
+  /* Visual side */
+  .about-visual {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .binder-card {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card), var(--shadow-accent);
+  }
+
+  .binder-tab {
+    background: var(--color-accent);
+    color: #0f1624;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.6rem var(--space-xl);
+  }
+
+  .binder-toc {
+    list-style: none;
+    padding: var(--space-lg) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .binder-toc li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .binder-toc li:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .toc-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .binder-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0.75rem var(--space-xl);
+    background: rgba(74, 222, 128, 0.07);
+    border-top: 1px solid rgba(74, 222, 128, 0.2);
+    font-size: 0.78rem;
+    color: #4ade80;
+    font-weight: 600;
+  }
+
+  .badge-icon { font-size: 0.7rem; }
+
+  .about-deco-text {
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(212, 160, 23, 0.18);
+    line-height: 1.8;
+    text-align: right;
+  }
+
+  /* Content side */
+  .about-content { display: flex; flex-direction: column; }
+
+  .about-body {
+    font-size: 0.975rem;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    max-width: 58ch;
+    margin-bottom: var(--space-md);
+  }
+
+  .expertise-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
+  .chip {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--color-accent-muted);
+    border: 1px solid var(--color-border);
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 860px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .about-visual { order: 2; }
+    .about-content { order: 1; }
+  }
+</style>

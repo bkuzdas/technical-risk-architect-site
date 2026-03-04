@@ -1,0 +1,234 @@
+---
+// Contact Section
+---
+
+<section class="section section--alt" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <!-- Left: Intro -->
+      <div class="contact-intro">
+        <div class="accent-line"></div>
+        <p class="section-label">Start the Conversation</p>
+        <h2 class="section-heading">
+          Ready to Build<br />
+          <span class="accent-text">Infrastructure That Holds?</span>
+        </h2>
+        <p class="contact-body">
+          Whether you're approaching an audit, architecting a new environment, or simply
+          need a trusted expert to assess your current posture — we'd like to hear from you.
+        </p>
+        <p class="contact-body">
+          Engagements begin with a no-obligation discovery call. We'll assess your situation
+          and recommend a path forward.
+        </p>
+
+        <div class="contact-highlights">
+          <div class="highlight-item">
+            <span class="h-icon" aria-hidden="true">◈</span>
+            <div>
+              <strong>No Obligation Discovery Call</strong>
+              <p>We listen first. Every engagement starts with understanding your business.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="h-icon" aria-hidden="true">⬡</span>
+            <div>
+              <strong>Documented from Day One</strong>
+              <p>Every project includes full compliance documentation — built in, not bolted on.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="h-icon" aria-hidden="true">⬟</span>
+            <div>
+              <strong>Industry-Specific Expertise</strong>
+              <p>Biotech, financial services, healthcare, and other regulated verticals.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="contact-form-wrap">
+        <form class="contact-form" name="contact" method="POST" data-netlify="true" action="/success">
+          <input type="hidden" name="form-name" value="contact" />
+
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-input"
+              placeholder="Jane Smith"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="org" class="form-label">Organization</label>
+            <input
+              type="text"
+              id="org"
+              name="organization"
+              class="form-input"
+              placeholder="Acme Biotech, LLC"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="jane@example.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="interest" class="form-label">Area of Interest</label>
+            <select id="interest" name="interest" class="form-input form-select">
+              <option value="" disabled selected>Select a service tier…</option>
+              <option value="audit-strategy">Tier I — Audit & Strategy</option>
+              <option value="infrastructure">Tier II — Infrastructure Hardening</option>
+              <option value="managed">Tier III — Managed Risk Architecture</option>
+              <option value="unsure">Not sure yet — let's talk</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message" class="form-label">Tell Us About Your Situation *</label>
+            <textarea
+              id="message"
+              name="message"
+              class="form-input form-textarea"
+              placeholder="Briefly describe your environment, upcoming audits, or pain points…"
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary form-submit">
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .accent-text { color: var(--color-accent); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4xl);
+    align-items: start;
+  }
+
+  .contact-intro { display: flex; flex-direction: column; }
+
+  .contact-body {
+    font-size: 0.975rem;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    max-width: 54ch;
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-highlights {
+    margin-top: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .highlight-item {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+  }
+
+  .h-icon {
+    font-size: 1.1rem;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .highlight-item strong {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+  }
+
+  .highlight-item p {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    max-width: none;
+  }
+
+  /* Form */
+  .contact-form-wrap {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: var(--space-xs); }
+
+  .form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  .form-input {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: 0.7rem 1rem;
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    width: 100%;
+    outline: none;
+  }
+
+  .form-input::placeholder { color: var(--color-text-muted); }
+
+  .form-input:focus {
+    border-color: var(--color-accent-dark);
+    box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.12);
+  }
+
+  .form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa3b8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  .form-textarea { resize: vertical; min-height: 120px; }
+
+  .form-submit { width: 100%; justify-content: center; padding: 0.9rem; }
+
+  @media (max-width: 860px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,253 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Technical Risk Architect',
+  description = 'Audit-ready, high-performance infrastructure for organizations where downtime is not an option and compliance is not a suggestion.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0f1624" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+
+  <body>
+    <!-- NAV -->
+    <header class="site-header">
+      <nav class="container nav-inner">
+        <a href="/" class="nav-logo" aria-label="Technical Risk Architect Home">
+          <span class="logo-mark">TRA</span>
+          <span class="logo-wordmark">Technical Risk Architect</span>
+        </a>
+
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+
+        <ul class="nav-links" id="navLinks" role="list">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact" class="btn btn-outline nav-cta">Get In Touch</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <span class="logo-mark">TRA</span>
+          <p class="footer-tagline">If it isn't documented, it didn't happen.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#services">Services</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <p class="footer-copy">&copy; {new Date().getFullYear()} Technical Risk Architect. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* ── HEADER ── */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(15, 22, 36, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-subtle);
+    transition: background var(--transition-base);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--color-accent);
+    color: #0f1624;
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .logo-wordmark {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-base);
+  }
+
+  .nav-links a:hover {
+    color: var(--color-text-primary);
+  }
+
+  .nav-cta {
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--color-text-primary);
+    border-radius: 2px;
+    transition: all var(--transition-base);
+  }
+
+  @media (max-width: 700px) {
+    .logo-wordmark { display: none; }
+    .nav-toggle { display: flex; }
+
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: 68px;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      background: var(--color-bg-surface);
+      border-bottom: 1px solid var(--color-border-subtle);
+      padding: var(--space-md) var(--space-xl);
+    }
+
+    .nav-links.open { display: flex; }
+
+    .nav-links li { width: 100%; padding: 0.6rem 0; border-bottom: 1px solid var(--color-border-subtle); }
+    .nav-links li:last-child { border-bottom: none; }
+    .nav-cta { margin-top: var(--space-sm); }
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--color-bg-section-alt);
+    border-top: 1px solid var(--color-border-subtle);
+    padding-block: var(--space-3xl);
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: var(--space-lg) var(--space-3xl);
+    align-items: start;
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .footer-tagline {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    max-width: none;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: var(--space-xl);
+  }
+
+  .footer-links a {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .footer-links a:hover { color: var(--color-accent); }
+
+  .footer-copy {
+    grid-column: 1 / -1;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    max-width: none;
+  }
+
+  @media (max-width: 600px) {
+    .footer-inner { grid-template-columns: 1fr; }
+    .footer-links { flex-wrap: wrap; gap: var(--space-lg); }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const links  = document.getElementById('navLinks');
+  toggle?.addEventListener('click', () => {
+    const open = links?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  // Close on nav link click (mobile)
+  links?.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', () => links.classList.remove('open'))
+  );
+</script>
