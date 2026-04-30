@@ -1,0 +1,282 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allArticles = await getCollection('articles');
+const articles = allArticles
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categories = [...new Set(articles.map(a => a.data.category))].sort();
+---
+
+<BaseLayout
+  title="Articles — Technical Risk Architect"
+  description="Practical insights on enterprise security architecture, FDA/CGMP compliance, cloud infrastructure, and healthcare IT from 25+ years of regulated-environment experience."
+>
+
+<!-- ── PAGE HERO ── -->
+<section class="articles-hero">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-badge">Insights & Writing</span>
+    </div>
+    <h1 class="hero-title">Articles</h1>
+    <p class="hero-sub">
+      Practical perspectives on enterprise security, FDA-regulated systems, cloud architecture, and healthcare IT — written for the architects, CISOs, and IT leaders who build in high-stakes environments.
+    </p>
+    <div class="hero-stats">
+      <span class="stat"><strong>{articles.length}</strong> Articles</span>
+      <span class="stat-div">·</span>
+      <span class="stat"><strong>{categories.length}</strong> Topics</span>
+      <span class="stat-div">·</span>
+      <span class="stat">Healthcare · Life Sciences · Enterprise Security</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FILTER BAR ── -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-inner">
+      <span class="filter-label">Topic:</span>
+      <div class="filter-chips" id="filterChips">
+        <button class="chip chip--active" data-cat="all">All</button>
+        {categories.map(cat => (
+          <button class="chip" data-cat={cat}>{cat}</button>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FEATURED ARTICLES ── -->
+{articles.filter(a => a.data.featured).length > 0 && (
+  <section class="featured-section" id="featured">
+    <div class="container">
+      <p class="section-eyebrow">Featured</p>
+      <div class="featured-grid" id="featuredGrid">
+        {articles.filter(a => a.data.featured).map(article => (
+          <article class="featured-card card-item" data-cat={article.data.category}>
+            <a href={`/articles/${article.slug}`} class="featured-inner">
+              {article.data.coverImage && (
+                <div class="featured-img">
+                  <img src={article.data.coverImage} alt={article.data.title} loading="lazy" />
+                </div>
+              )}
+              <div class="featured-content">
+                <div class="card-meta">
+                  <span class="cat-badge">{article.data.category}</span>
+                  <span class="card-date">
+                    {article.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </span>
+                  {article.data.published && <span class="linkedin-badge">On LinkedIn</span>}
+                </div>
+                <h2 class="featured-title">{article.data.title}</h2>
+                <p class="featured-desc">{article.data.description}</p>
+                <div class="card-tags">
+                  {article.data.tags.slice(0, 4).map(tag => (
+                    <span class="tag">#{tag}</span>
+                  ))}
+                </div>
+                <span class="read-link">Read Article →</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ── ALL ARTICLES GRID ── -->
+<section class="articles-section" id="allArticles">
+  <div class="container">
+    <p class="section-eyebrow">All Articles</p>
+    <p class="no-results" id="noResults" style="display:none;">No articles in this category yet.</p>
+    <div class="articles-grid" id="articlesGrid">
+      {articles.map(article => (
+        <article class="article-card card-item" data-cat={article.data.category}>
+          <a href={`/articles/${article.slug}`} class="card-inner">
+            {article.data.coverImage && (
+              <div class="card-img">
+                <img src={article.data.coverImage} alt={article.data.title} loading="lazy" />
+              </div>
+            )}
+            <div class="card-content">
+              <div class="card-meta">
+                <span class="cat-badge">{article.data.category}</span>
+                {article.data.published && <span class="linkedin-badge">LinkedIn</span>}
+              </div>
+              <h3 class="card-title">{article.data.title}</h3>
+              <p class="card-desc">{article.data.description}</p>
+              <div class="card-footer">
+                <span class="card-date">
+                  {article.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+                <span class="read-more">Read →</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+</BaseLayout>
+
+<style>
+/* ── HERO ── */
+.articles-hero {
+  background: linear-gradient(160deg, var(--color-bg-base) 0%, #0d1829 100%);
+  padding: calc(68px + var(--space-4xl)) 0 var(--space-3xl);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.hero-eyebrow { margin-bottom: var(--space-md); }
+.eyebrow-badge {
+  display: inline-block;
+  background: var(--color-accent-muted);
+  border: 1px solid var(--color-border);
+  color: var(--color-accent);
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; padding: 0.3rem 0.9rem;
+  border-radius: 100px;
+}
+.hero-title {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 800; color: var(--color-text-primary);
+  letter-spacing: -0.02em; line-height: 1.1;
+  margin-bottom: var(--space-lg);
+}
+.hero-sub {
+  font-size: 1.05rem; color: var(--color-text-secondary);
+  max-width: 62ch; line-height: 1.75; margin-bottom: var(--space-xl);
+}
+.hero-stats { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.stat { font-size: 0.88rem; color: var(--color-text-secondary); }
+.stat strong { color: var(--color-accent); }
+.stat-div { color: var(--color-border); }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  background: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: var(--space-md) 0;
+  position: sticky; top: 68px; z-index: 50;
+}
+.filter-inner { display: flex; align-items: center; gap: var(--space-lg); flex-wrap: wrap; }
+.filter-label { font-size: 0.72rem; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+.filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.chip {
+  background: var(--color-bg-elevated); border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary); font-size: 0.78rem; font-weight: 500;
+  padding: 0.3rem 0.85rem; border-radius: 100px;
+  cursor: pointer; transition: all var(--transition-base);
+}
+.chip:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.chip--active { background: var(--color-accent); border-color: var(--color-accent); color: #0f1624; font-weight: 700; }
+
+/* ── SECTION EYEBROW ── */
+.section-eyebrow {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--color-accent);
+  margin-bottom: var(--space-xl);
+}
+
+/* ── FEATURED ── */
+.featured-section {
+  background: var(--color-bg-section-alt);
+  padding: var(--space-3xl) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: var(--space-xl); }
+.featured-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg); overflow: hidden;
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.featured-card:hover { transform: translateY(-4px); border-color: var(--color-border); box-shadow: var(--shadow-accent); }
+.featured-inner { display: flex; flex-direction: column; height: 100%; color: inherit; }
+.featured-img { width: 100%; aspect-ratio: 16/7; overflow: hidden; }
+.featured-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.featured-card:hover .featured-img img { transform: scale(1.03); }
+.featured-content { padding: var(--space-xl); flex: 1; display: flex; flex-direction: column; gap: var(--space-md); }
+.featured-title { font-size: 1.3rem; font-weight: 700; color: var(--color-text-primary); line-height: 1.3; }
+.featured-desc { font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.7; flex: 1; }
+.read-link { font-size: 0.88rem; font-weight: 600; color: var(--color-accent); transition: opacity var(--transition-base); }
+.featured-card:hover .read-link { opacity: 0.8; }
+
+/* ── ALL ARTICLES ── */
+.articles-section { background: var(--color-bg-base); padding: var(--space-3xl) 0; }
+.articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-xl); }
+.article-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg); overflow: hidden;
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+.article-card:hover { transform: translateY(-3px); border-color: var(--color-border); }
+.card-inner { display: flex; flex-direction: column; height: 100%; color: inherit; }
+.card-img { width: 100%; aspect-ratio: 16/9; overflow: hidden; background: var(--color-bg-elevated); }
+.card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.article-card:hover .card-img img { transform: scale(1.04); }
+.card-content { padding: var(--space-lg); flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.card-title { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); line-height: 1.35; }
+.card-desc { font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.65; flex: 1; }
+.card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: var(--space-sm); border-top: 1px solid var(--color-border-subtle); }
+.read-more { font-size: 0.82rem; font-weight: 600; color: var(--color-accent); }
+
+/* ── SHARED ── */
+.card-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.cat-badge {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-accent); background: var(--color-accent-muted);
+  padding: 0.2rem 0.6rem; border-radius: 100px; border: 1px solid var(--color-border);
+}
+.linkedin-badge {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #5ba4d4; background: rgba(91,164,212,.1);
+  padding: 0.2rem 0.6rem; border-radius: 100px; border: 1px solid rgba(91,164,212,.2);
+}
+.card-date { font-size: 0.75rem; color: var(--color-text-muted); }
+.card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.tag { font-size: 0.7rem; color: var(--color-text-muted); background: var(--color-bg-elevated); padding: 0.15rem 0.5rem; border-radius: var(--radius-sm); }
+.no-results { font-size: 0.95rem; color: var(--color-text-muted); padding: var(--space-2xl) 0; }
+.card-item.hidden { display: none; }
+
+@media (max-width: 640px) {
+  .featured-grid { grid-template-columns: 1fr; }
+  .articles-grid { grid-template-columns: 1fr; }
+  .filter-bar { position: static; }
+}
+</style>
+
+<script>
+const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+const cards = document.querySelectorAll<HTMLElement>('.card-item');
+const noResults = document.getElementById('noResults');
+const featuredSection = document.getElementById('featured');
+
+chips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    const cat = chip.dataset.cat!;
+    chips.forEach(c => c.classList.remove('chip--active'));
+    chip.classList.add('chip--active');
+
+    let visible = 0;
+    cards.forEach(card => {
+      const show = cat === 'all' || card.dataset.cat === cat;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+
+    if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
+    if (featuredSection) {
+      const featuredVisible = [...featuredSection.querySelectorAll<HTMLElement>('.card-item')]
+        .some(c => !c.classList.contains('hidden'));
+      (featuredSection as HTMLElement).style.display = featuredVisible ? '' : 'none';
+    }
+  });
+});
+</script>

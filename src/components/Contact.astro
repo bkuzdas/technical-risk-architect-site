@@ -1,5 +1,6 @@
 ---
 // Contact Section
+const TURNSTILE_SITE_KEY = '0x4AAAAAAC87rY45ADWoK6an';
 ---
 
 <section class="section section--alt" id="contact">
@@ -56,20 +57,20 @@
           <p>Thank you — we'll be in touch within one business day.</p>
         </div>
 
-        <form class="contact-form" id="contactForm">
+        <form class="contact-form" id="contactForm" method="POST" action="/api/contact">
           <div class="form-group">
             <label for="name" class="form-label">Full Name *</label>
-            <input type="text" id="name" name="name" class="form-input" placeholder="Jane Smith" required />
+            <input type="text" id="name" name="name" class="form-input" placeholder="Jane Smith" required maxlength="120" />
           </div>
 
           <div class="form-group">
             <label for="org" class="form-label">Organization</label>
-            <input type="text" id="org" name="organization" class="form-input" placeholder="Acme Biotech, LLC" />
+            <input type="text" id="org" name="organization" class="form-input" placeholder="Acme Biotech, LLC" maxlength="120" />
           </div>
 
           <div class="form-group">
             <label for="email" class="form-label">Email Address *</label>
-            <input type="email" id="email" name="email" class="form-input" placeholder="jane@example.com" required />
+            <input type="email" id="email" name="email" class="form-input" placeholder="jane@example.com" required maxlength="254" />
           </div>
 
           <div class="form-group">
@@ -88,8 +89,14 @@
             <textarea
               id="message" name="message" class="form-input form-textarea"
               placeholder="Briefly describe your environment, upcoming audits, or pain points…"
-              rows="5" required
+              rows="5" required maxlength="4000"
             ></textarea>
+          </div>
+
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" class="bot-field" aria-hidden="true" />
+
+          <div class="turnstile-wrap">
+            <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>
           </div>
 
           <div class="form-error" id="formError" style="display:none;"></div>
@@ -212,6 +219,16 @@
   .form-textarea { resize: vertical; min-height: 120px; }
 
   .form-submit { width: 100%; justify-content: center; padding: 0.9rem; }
+  .turnstile-wrap { display: flex; justify-content: center; }
+
+  .bot-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
 
   .form-error {
     background: rgba(239, 68, 68, 0.1);
@@ -260,6 +277,8 @@
   }
 </style>
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <script>
   const form = document.getElementById('contactForm') as HTMLFormElement;
   const successBox = document.getElementById('formSuccess') as HTMLElement;
@@ -289,22 +308,20 @@
     const interest     = (form.querySelector('#interest') as HTMLSelectElement).value;
     const message      = (form.querySelector('#message') as HTMLTextAreaElement).value;
     const interestLabel = interestLabels[interest] || interest || 'Not specified';
+    const turnstileToken = (form.querySelector('[name="cf-turnstile-response"]') as HTMLInputElement)?.value || '';
 
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          access_key:   '726fb410-a853-4a23-ad62-1a67497b715b',
-          from_name:    'Technical Risk Architect Website',
-          subject:      `New Inquiry: ${name} — ${interestLabel}`,
-          replyto:      email,
-          botcheck:     '',
           name,
           email,
           organization: organization || 'Not provided',
           interest:     interestLabel,
           message,
+          website:      (form.querySelector('#website') as HTMLInputElement).value,
+          turnstileToken,
         }),
       });
 

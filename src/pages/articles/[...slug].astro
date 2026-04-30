@@ -1,0 +1,384 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map(article => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+
+const allArticles = await getCollection('articles');
+const related = allArticles
+  .filter(a => a.slug !== article.slug && a.data.category === article.data.category)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={`${article.data.title} — Technical Risk Architect`}
+  description={article.data.description}
+>
+
+<!-- ── ARTICLE HEADER ── -->
+<header class="article-header">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/articles">Articles</a>
+      <span>/</span>
+      <span class="crumb-current">{article.data.category}</span>
+    </nav>
+
+    <div class="header-meta">
+      <span class="cat-badge">{article.data.category}</span>
+      {article.data.published && (
+        <span class="linkedin-badge">Published on LinkedIn</span>
+      )}
+    </div>
+
+    <h1 class="article-title">{article.data.title}</h1>
+    <p class="article-description">{article.data.description}</p>
+
+    <div class="header-bottom">
+      <div class="author-block">
+        <div class="author-avatar">BK</div>
+        <div class="author-info">
+          <span class="author-name">Brian Kuzdas</span>
+          <span class="author-role">Enterprise IT Architect · Madison, WI</span>
+        </div>
+      </div>
+      <span class="article-date">
+        {article.data.pubDate.toLocaleDateString('en-US', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        })}
+      </span>
+    </div>
+
+    <div class="article-tags">
+      {article.data.tags.map(tag => (
+        <span class="tag">#{tag}</span>
+      ))}
+    </div>
+  </div>
+</header>
+
+<!-- ── COVER IMAGE ── -->
+{article.data.coverImage && (
+  <div class="cover-wrap">
+    <div class="container">
+      <img
+        src={article.data.coverImage}
+        alt={article.data.title}
+        class="cover-img"
+        loading="eager"
+      />
+    </div>
+  </div>
+)}
+
+<!-- ── BODY ── -->
+<div class="article-layout">
+  <div class="container">
+    <div class="article-grid">
+
+      <main class="article-body prose">
+        <Content />
+      </main>
+
+      <aside class="article-sidebar">
+        <div class="sidebar-sticky">
+
+          <div class="sidebar-card">
+            <div class="sidebar-author">
+              <div class="sidebar-avatar">BK</div>
+              <div>
+                <p class="sidebar-name">Brian Kuzdas</p>
+                <p class="sidebar-title">Enterprise IT Architect</p>
+              </div>
+            </div>
+            <p class="sidebar-bio">
+              25+ years building enterprise infrastructure, validated systems, and security architecture for FDA-regulated, healthcare, and financial environments.
+            </p>
+            <div class="sidebar-links">
+              <a href="https://www.linkedin.com/in/brian-kuzdas-a176b945/" target="_blank" rel="noopener" class="btn btn-primary sidebar-btn">
+                Connect on LinkedIn ↗
+              </a>
+              <a href="mailto:contact@technicalriskarchitect.com" class="btn btn-outline sidebar-btn">
+                Discuss Your Project
+              </a>
+              <a href="/articles" class="back-link">← All Articles</a>
+            </div>
+          </div>
+
+          {article.data.linkedinUrl && (
+            <div class="sidebar-card sidebar-li">
+              <p class="sidebar-section-label">Also on LinkedIn</p>
+              <a href={article.data.linkedinUrl} target="_blank" rel="noopener" class="li-link">
+                Read &amp; comment on LinkedIn ↗
+              </a>
+            </div>
+          )}
+
+          <div class="sidebar-card">
+            <p class="sidebar-section-label">Tags</p>
+            <div class="sidebar-tags">
+              {article.data.tags.map(tag => (
+                <span class="sidebar-tag">#{tag}</span>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ── RELATED ── -->
+{related.length > 0 && (
+  <section class="related-section">
+    <div class="container">
+      <p class="section-eyebrow">More in {article.data.category}</p>
+      <div class="related-grid">
+        {related.map(rel => (
+          <article class="related-card">
+            <a href={`/articles/${rel.slug}`}>
+              {rel.data.coverImage && (
+                <div class="related-img">
+                  <img src={rel.data.coverImage} alt={rel.data.title} loading="lazy" />
+                </div>
+              )}
+              <div class="related-content">
+                <span class="cat-badge">{rel.data.category}</span>
+                <h4 class="related-title">{rel.data.title}</h4>
+                <p class="related-desc">{rel.data.description.slice(0, 120)}…</p>
+                <span class="read-more-link">Read Article →</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ── CTA ── -->
+<section class="bottom-cta">
+  <div class="container">
+    <div class="cta-inner">
+      <div>
+        <h2 class="cta-title">Ready to close the gap?</h2>
+        <p class="cta-sub">Available for architecture reviews, security assessments, and vCTO engagements in regulated environments.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="/#contact" class="btn btn-primary">Get In Touch</a>
+        <a href="/articles" class="btn btn-outline">← All Articles</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</BaseLayout>
+
+<style>
+/* ── HEADER ── */
+.article-header {
+  background: linear-gradient(160deg, var(--color-bg-base) 0%, #0d1829 100%);
+  padding: calc(68px + var(--space-3xl)) 0 var(--space-3xl);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.breadcrumb {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; color: var(--color-text-muted);
+  margin-bottom: var(--space-lg);
+}
+.breadcrumb a { color: var(--color-text-secondary); transition: color var(--transition-base); }
+.breadcrumb a:hover { color: var(--color-accent); }
+.breadcrumb > span { color: var(--color-border); }
+.crumb-current { color: var(--color-accent); }
+
+.header-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: var(--space-lg); }
+.article-title {
+  font-size: clamp(1.6rem, 4vw, 2.75rem);
+  font-weight: 800; color: var(--color-text-primary);
+  letter-spacing: -0.02em; line-height: 1.2;
+  margin-bottom: var(--space-lg); max-width: 70ch;
+}
+.article-description {
+  font-size: 1.05rem; color: var(--color-text-secondary);
+  max-width: 64ch; line-height: 1.75; margin-bottom: var(--space-xl);
+}
+.header-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-lg); flex-wrap: wrap; margin-bottom: var(--space-lg);
+}
+.author-block { display: flex; align-items: center; gap: var(--space-md); }
+.author-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--color-accent); color: #0f1624;
+  font-weight: 800; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.author-info { display: flex; flex-direction: column; gap: 0.15rem; }
+.author-name { font-size: 0.95rem; font-weight: 600; color: var(--color-text-primary); }
+.author-role { font-size: 0.75rem; color: var(--color-text-muted); }
+.article-date { font-size: 0.82rem; color: var(--color-text-muted); }
+.article-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.tag {
+  font-size: 0.72rem; color: var(--color-text-muted);
+  background: var(--color-bg-elevated); padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle);
+}
+
+/* ── COVER ── */
+.cover-wrap { background: var(--color-bg-base); }
+.cover-img {
+  width: 100%; max-height: 460px; object-fit: cover;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: block; border: 1px solid var(--color-border-subtle);
+}
+
+/* ── LAYOUT ── */
+.article-layout { padding: var(--space-3xl) 0; background: var(--color-bg-base); }
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--space-4xl);
+  align-items: start;
+}
+
+/* ── PROSE ── */
+.prose {
+  font-size: 1.02rem; line-height: 1.85;
+  color: var(--color-text-secondary);
+}
+.prose :global(h2) {
+  font-size: 1.5rem; font-weight: 700; color: var(--color-text-primary);
+  margin: 2.5rem 0 1rem; letter-spacing: -0.01em; line-height: 1.3;
+  border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 0.5rem;
+}
+.prose :global(h3) {
+  font-size: 1.18rem; font-weight: 700; color: var(--color-text-primary);
+  margin: 2rem 0 0.75rem;
+}
+.prose :global(h4) {
+  font-size: 1rem; font-weight: 600; color: var(--color-accent);
+  margin: 1.5rem 0 0.5rem; letter-spacing: 0.02em;
+}
+.prose :global(p) { margin-bottom: 1.4rem; }
+.prose :global(ul), .prose :global(ol) { margin: 1rem 0 1.4rem 1.5rem; }
+.prose :global(ul) { list-style: disc; }
+.prose :global(ol) { list-style: decimal; }
+.prose :global(li) { margin-bottom: 0.5rem; line-height: 1.7; }
+.prose :global(strong) { font-weight: 700; color: var(--color-text-primary); }
+.prose :global(em) { font-style: italic; color: var(--color-text-muted); }
+.prose :global(a) { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.prose :global(a):hover { color: var(--color-accent-light); }
+.prose :global(hr) { border: none; border-top: 1px solid var(--color-border-subtle); margin: 2.5rem 0; }
+.prose :global(blockquote) {
+  border-left: 3px solid var(--color-accent);
+  padding: 0.75rem 1.25rem; margin: 1.5rem 0;
+  background: var(--color-accent-muted); border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-style: italic; color: var(--color-text-secondary);
+}
+.prose :global(code) {
+  font-family: var(--font-mono); font-size: 0.87em;
+  background: var(--color-bg-elevated); padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm); color: var(--color-accent);
+  border: 1px solid var(--color-border-subtle);
+}
+.prose :global(pre) {
+  background: var(--color-bg-elevated); padding: 1.25rem;
+  border-radius: var(--radius-lg); overflow-x: auto; margin: 1.5rem 0;
+  border: 1px solid var(--color-border-subtle);
+}
+.prose :global(pre code) { background: none; border: none; color: var(--color-text-primary); padding: 0; }
+.prose :global(table) { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+.prose :global(th) { background: var(--color-bg-elevated); color: var(--color-text-primary); padding: 0.65rem 1rem; text-align: left; font-weight: 600; border-bottom: 1px solid var(--color-border); }
+.prose :global(td) { padding: 0.65rem 1rem; border-bottom: 1px solid var(--color-border-subtle); color: var(--color-text-secondary); }
+.prose :global(tr:hover td) { background: var(--color-bg-elevated); }
+
+/* ── SIDEBAR ── */
+.sidebar-sticky { position: sticky; top: calc(68px + 2rem); display: flex; flex-direction: column; gap: var(--space-lg); }
+.sidebar-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg); padding: var(--space-lg);
+}
+.sidebar-author { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
+.sidebar-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--color-accent); color: #0f1624;
+  font-weight: 800; font-size: 0.82rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sidebar-name { font-weight: 700; font-size: 0.92rem; color: var(--color-text-primary); }
+.sidebar-title { font-size: 0.75rem; color: var(--color-text-muted); }
+.sidebar-bio { font-size: 0.82rem; color: var(--color-text-secondary); line-height: 1.65; margin-bottom: var(--space-md); }
+.sidebar-links { display: flex; flex-direction: column; gap: var(--space-sm); }
+.sidebar-btn { width: 100%; text-align: center; font-size: 0.82rem; }
+.back-link { font-size: 0.82rem; font-weight: 500; color: var(--color-text-secondary); transition: color var(--transition-base); text-align: center; }
+.back-link:hover { color: var(--color-accent); }
+.sidebar-li { border-left: 2px solid #0077b5; }
+.sidebar-section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-text-muted); margin-bottom: var(--space-sm); }
+.li-link { font-size: 0.88rem; font-weight: 600; color: #5ba4d4; transition: opacity var(--transition-base); }
+.li-link:hover { opacity: 0.75; }
+.sidebar-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.sidebar-tag { font-size: 0.7rem; color: var(--color-text-muted); background: var(--color-bg-elevated); padding: 0.2rem 0.5rem; border-radius: var(--radius-sm); }
+
+/* ── RELATED ── */
+.related-section { background: var(--color-bg-section-alt); padding: var(--space-3xl) 0; border-top: 1px solid var(--color-border-subtle); }
+.section-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-xl); }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-xl); }
+.related-card {
+  background: var(--color-bg-surface); border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg); overflow: hidden;
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+.related-card:hover { transform: translateY(-3px); border-color: var(--color-border); }
+.related-card a { display: flex; flex-direction: column; height: 100%; color: inherit; }
+.related-img { aspect-ratio: 16/9; overflow: hidden; background: var(--color-bg-elevated); }
+.related-img img { width: 100%; height: 100%; object-fit: cover; }
+.related-content { padding: var(--space-lg); flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.related-title { font-size: 0.95rem; font-weight: 700; color: var(--color-text-primary); line-height: 1.35; }
+.related-desc { font-size: 0.82rem; color: var(--color-text-secondary); line-height: 1.6; flex: 1; }
+.read-more-link { font-size: 0.82rem; font-weight: 600; color: var(--color-accent); margin-top: auto; transition: opacity var(--transition-base); }
+.related-card:hover .read-more-link { opacity: 0.75; }
+
+/* ── CTA ── */
+.bottom-cta { background: var(--color-bg-section-alt); padding: var(--space-3xl) 0; border-top: 1px solid var(--color-border-subtle); }
+.cta-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2xl); flex-wrap: wrap; }
+.cta-title { font-size: 1.65rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: var(--space-sm); }
+.cta-sub { font-size: 0.95rem; color: var(--color-text-secondary); max-width: 50ch; }
+.cta-actions { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+
+/* ── BADGES ── */
+.cat-badge {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-accent); background: var(--color-accent-muted);
+  padding: 0.2rem 0.6rem; border-radius: 100px; border: 1px solid var(--color-border);
+}
+.linkedin-badge {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #5ba4d4; background: rgba(91,164,212,.1);
+  padding: 0.2rem 0.6rem; border-radius: 100px; border: 1px solid rgba(91,164,212,.2);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .article-grid { grid-template-columns: 1fr; }
+  .article-sidebar { display: none; }
+}
+@media (max-width: 640px) {
+  .header-bottom { flex-direction: column; align-items: flex-start; }
+  .cta-inner { flex-direction: column; }
+  .related-grid { grid-template-columns: 1fr; }
+}
+</style>
